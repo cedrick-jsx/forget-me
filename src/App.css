@@ -30,7 +30,6 @@ body {
   place-content: center;
   background: url("./assets/img/background/bg1.gif") no-repeat center fixed;
   background-size: cover;
-  /* width: 1366px; */
 }
 
 .container-main {
