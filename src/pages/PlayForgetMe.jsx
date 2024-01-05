@@ -299,7 +299,7 @@ export default function PlayForgetMe() {
 
   setTimeout(() => {
     if (countUp.current < 1000) {
-      countUp.current += 0.0051;
+      countUp.current += 0.0071;
       setGame(countUp.current);
       if (countUp.current > 1000) {
         countUp.current = 10000;
@@ -314,7 +314,7 @@ export default function PlayForgetMe() {
         countDown.current = 0;
         setIsNextLevel(true);
       } else {
-        countDown.current -= 0.0051;
+        countDown.current -= 0.0071;
         setGame(countDown.current);
         if (countDown.current < 0) {
           countDown.current = 0;
