@@ -937,8 +937,8 @@ const BlindManDaughter = (props) => {
             <button
               key={id}
               style={{
-                width: "100px",
-                height: "32.9px",
+                width: "71px",
+                height: "49.5px",
                 pointerEvents: "none",
                 flex: "1 0 auto",
                 color: "transparent",
@@ -1301,11 +1301,9 @@ const BlindManDaughter = (props) => {
                       <>
                         <Bond />
                         <Bond />
-                        <Bond />
                       </>
                     ) : (
                       <>
-                        <Bond />
                         <Bond />
                         <Bond />
                         <Bond />
@@ -1351,7 +1349,7 @@ const BlindManDaughter = (props) => {
                   className="game2Children-p"
                   style={{
                     color: props.name === "daughter" ? "#810ca8" : "#86135c",
-                    fontSize: "1rem",
+                    fontSize: "0.9rem",
                     fontWeight: "700",
                     textAlign: "justify",
                     wordBreak: "break-word",
