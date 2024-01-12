@@ -42,7 +42,7 @@ export default function LevelForgetMe() {
           flexFlow: props.name === "main" ? "column nowrap" : "row wrap",
           placeContent: "center",
           placeItems: "center",
-          animation: props.name === "main" && "fade-entrance 2000ms ease",
+          animation: props.name === "main" && "fade-entrance 1000ms",
           marginBottom: props.name === "main" && "50px",
           gap: props.name !== "main" && "50px",
         }}

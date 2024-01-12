@@ -13,7 +13,7 @@ export default function StoryForgetMe() {
           placeContent: "center",
           placeItems: "center",
           width: props.name === "main" ? "1000px" : "50%",
-          animation: props.name === "main" && "fade-entrance 2000ms ease",
+          animation: props.name === "main" && "fade-entrance 1000ms",
           position: props.name === "main" && "relative",
           margin: props.name !== "main" && "50px 0 30px 0",
         }}
@@ -42,8 +42,7 @@ export default function StoryForgetMe() {
   return (
     <StoryContainer name="main">
       <StoryContainer name="header">
-        <h1 className="header-h1">Story</h1>
-        <h1 className="header-h1">Game</h1>
+        <h1 className="header-h1">Game Story</h1>
       </StoryContainer>
 
       <p

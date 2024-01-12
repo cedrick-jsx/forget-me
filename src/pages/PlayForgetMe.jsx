@@ -13,7 +13,7 @@ import {
   faRightToBracket,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
-import Bg1 from "../assets/img/background/bg1.gif";
+import Bg1 from "../assets/img/background/bg.jpg";
 import Party from "../assets/img/emoji/party-popper.webp";
 import Confetti from "../assets/img/emoji/confetti-ball.webp";
 import GlowStar from "../assets/img/emoji/glowing-star.webp";
@@ -186,7 +186,8 @@ const arrayGame = {
   ],
 };
 
-let contentChecker = [];
+let contentChecker = [],
+  timerGame = 0;
 
 export default function PlayForgetMe() {
   const navigate = useNavigate();
@@ -205,6 +206,7 @@ export default function PlayForgetMe() {
   const [isDisable, setIsDisable] = useState(true);
   const [isNextLevel, setIsNextLevel] = useState(false);
   const [isShake, setIsShake] = useState(false);
+  const [isTimer, setIsTimer] = useState(true);
 
   const ResetGame = () => {
     contentChecker = [];
@@ -216,12 +218,15 @@ export default function PlayForgetMe() {
     indexCorrect.current = 0;
     countUp.current = 0;
     countDown.current = 0;
+    setGame(0);
     setIsRandomDone(true);
     setIsTransparent(false);
     setIsFailed(false);
     setIsDisable(true);
     setIsNextLevel(false);
     setIsShake(false);
+    setIsTimer(true);
+    clearInterval(timerGame);
   };
 
   if (isRandomDone) {
@@ -297,68 +302,39 @@ export default function PlayForgetMe() {
     setIsRandomDone(false);
   }
 
-  setTimeout(() => {
-    if (countUp.current < 1000) {
-      countUp.current += 0.11;
-      setGame(countUp.current);
-      if (countUp.current > 1000) {
-        countUp.current = 10000;
-        countDown.current = 3000;
-        setIsTransparent(true);
-        setIsDisable(false);
-        setGame(countDown.current);
-      }
-    } else if (countDown.current > 0) {
-      if (indexCorrect.current === 16) {
-        localStorage.setItem("countDown", countDown.current);
-        countDown.current = 0;
-        setIsNextLevel(true);
-      } else {
-        countDown.current -= 0.11;
-        setGame(countDown.current);
-        if (countDown.current < 0) {
-          countDown.current = 0;
-          setIsTransparent(false);
-          setIsFailed(true);
-          setIsDisable(true);
+  if (isTimer) {
+    clearInterval(timerGame);
+    timerGame = setInterval(() => {
+      if (countUp.current < 16) {
+        countUp.current += 1;
+        setGame(countUp.current);
+        if (countUp.current === 16) {
+          countUp.current = 10000;
+          countDown.current = 60;
+          setIsTransparent(true);
+          setIsDisable(false);
           setGame(countDown.current);
         }
+      } else if (countDown.current > 0) {
+        if (indexCorrect.current === 16) {
+          localStorage.setItem("countDown", countDown.current);
+          countDown.current = 0;
+          setIsNextLevel(true);
+        } else {
+          countDown.current -= 1;
+          setGame(countDown.current);
+          if (countDown.current === 0) {
+            countDown.current = 0;
+            setIsTransparent(false);
+            setIsFailed(true);
+            setIsDisable(true);
+            setGame("Zero");
+          }
+        }
       }
-    }
-  });
-
-  const BarColor = `${
-    (countUp.current > 900 &&
-      countUp.current !== 10000 &&
-      countDown.current === 0) ||
-    (countDown.current < 300 &&
-      countUp.current === 10000 &&
-      countDown.current !== 0)
-      ? "#ff0060"
-      : countUp.current >= 600 &&
-        countUp.current <= 900 &&
-        countUp.current !== 10000 &&
-        countDown.current === 0
-      ? "linear-gradient(90deg, #ff0060, #00fda2, #ff0060)"
-      : (countDown.current >= 300 &&
-          countDown.current <= 1000 &&
-          countUp.current === 10000) ||
-        (Math.trunc(localStorage.countDown) >= 300 &&
-          Math.trunc(localStorage.countDown) <= 1000)
-      ? "linear-gradient(90deg, #00fda2, #ff0060, #00fda2)"
-      : ((countUp.current >= 0 &&
-          countUp.current < 600 &&
-          countUp.current !== 10000 &&
-          countDown.current === 0) ||
-          (countDown.current <= 30000 &&
-            countDown.current > 1000 &&
-            countUp.current === 10000) ||
-          (Math.trunc(localStorage.countDown) <= 30000 &&
-            Math.trunc(localStorage.countDown) > 1000)) &&
-        !isFailed
-      ? "#00fda2"
-      : isFailed && "#ff0060"
-  }`;
+    }, 1000);
+    setIsTimer(false);
+  }
 
   useEffect(() => {
     if (isShake) {
@@ -373,60 +349,9 @@ export default function PlayForgetMe() {
     <section
       style={{
         width: "1200px",
-        margin: "25px 0",
+        margin: "30px 0",
       }}
     >
-      <section className="main-bar-container">
-        <div
-          className="bar-container"
-          style={{
-            width:
-              countUp.current !== 10000 && !isFailed
-                ? Math.trunc(game) / 10 + "%"
-                : countUp.current === 10000 && !isFailed
-                ? Math.trunc(game) / 30 + "%"
-                : isFailed && "100%",
-            animation:
-              countUp.current !== 10000 && !isFailed && !isShake
-                ? "bar-rotate 1000ms linear infinite"
-                : countUp.current === 10000 && !isFailed && !isShake
-                ? "bar-rotate 1000ms linear infinite reverse"
-                : countUp.current === 10000 &&
-                  !isFailed &&
-                  isShake &&
-                  "bar-rotate 1ms linear infinite reverse",
-            animationPlayState: indexCorrect.current === 16 && "paused",
-            transform: isFailed && "rotateX(45deg)",
-            transition: !isFailed && "100ms",
-          }}
-        >
-          <div
-            className="backs bar"
-            style={{
-              background: `${BarColor}`,
-            }}
-          ></div>
-          <div
-            className="tops bar"
-            style={{
-              background: `${BarColor}`,
-            }}
-          ></div>
-          <div
-            className="bottoms bar"
-            style={{
-              background: `${BarColor}`,
-            }}
-          ></div>
-          <div
-            className="fronts bar"
-            style={{
-              background: `${BarColor}`,
-            }}
-          ></div>
-        </div>
-      </section>
-
       <section
         style={{
           display: "flex",
@@ -471,7 +396,7 @@ export default function PlayForgetMe() {
                     "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)",
               }}
             >
-              {(game / 100).toFixed(2)}
+              {game}
             </h1>
           </ContainerHeader2>
 
@@ -483,9 +408,9 @@ export default function PlayForgetMe() {
               style={{
                 backgroundColor:
                   game >= 0 &&
-                  game <= 1000 &&
+                  game <= 16 &&
                   countUp.current !== 10000 &&
-                  contentChecker[Math.trunc(game / 62.5)] === array
+                  contentChecker[game] === array
                     ? "#ee6c4d"
                     : correctIndex.current[id] !== id && isFailed
                     ? "#ee6c4d"
@@ -496,9 +421,9 @@ export default function PlayForgetMe() {
                     : countUp.current !== 10000 && "#98c1d9",
                 boxShadow:
                   game >= 0 &&
-                  game <= 1000 &&
+                  game <= 16 &&
                   countUp.current !== 10000 &&
-                  contentChecker[Math.trunc(game / 62.5)] === array
+                  contentChecker[game] === array
                     ? "0px 0px 5px 5px #000c1a"
                     : correctIndex.current[id] !== id && isFailed
                     ? "-3px 3px 0px 0px #000c1a," +
@@ -523,20 +448,20 @@ export default function PlayForgetMe() {
                       "none",
                 transform:
                   game >= 0 &&
-                  game <= 1000 &&
+                  game <= 16 &&
                   countUp.current !== 10000 &&
-                  contentChecker[Math.trunc(game / 62.5)] === array &&
+                  contentChecker[game] === array &&
                   "scale(0.9)",
                 animation:
                   correctIndex.current[id] === id &&
                   indexCorrect.current !== 16 &&
                   !isFailed
-                    ? "move-down 800ms ease"
+                    ? "move-down 800ms"
                     : correctIndex.current[id] !== id &&
                       isFailed &&
                       "fa-bounce 1500ms ease infinite both alternate",
                 pointerEvents: correctIndex.current[id] === id && "none",
-                transition: countUp.current < 999 && "500ms",
+                transition: countUp.current < 16 && "500ms",
               }}
               onClick={() => {
                 if (contentChecker[indexCorrect.current] === array) {
@@ -545,11 +470,11 @@ export default function PlayForgetMe() {
                     indexCorrect.current;
                   indexCorrect.current++;
                 } else {
-                  if (countDown.current < 500) {
-                    countDown.current = 0.1;
+                  if (countDown.current <= 5) {
+                    countDown.current = 1;
                   } else {
                     setIsShake(true);
-                    countDown.current -= 500;
+                    countDown.current -= 5;
                   }
                 }
               }}
@@ -850,11 +775,11 @@ export default function PlayForgetMe() {
           }}
         >
           The blind man is in a predicament and needs your help. Every session
-          has a corresponding challenge. The first ten(10) seconds will be your
-          window to memorize the order based on the current challenge. The next
-          thirty(30) seconds is your limit to solve the problem. The Pills Order
-          will be your guideline to gain clues for his daughter. Failing to do
-          so will lead to the death of the blind man.
+          has a corresponding challenge. The first sixteen(16) seconds will be
+          your window to memorize the sequence based on the current challenge.
+          The next sixty(60) seconds is your limit to solve the problem. The
+          Pills Order will be your guideline to gain clues for his daughter.
+          Failing to do so will lead to the death of the blind man.
         </p>
       </section>
     </section>
@@ -927,9 +852,9 @@ const BlindManDaughter = (props) => {
           placeContent: "center",
           placeItems: "center",
           flexFlow: props.name === "daughter" && "row wrap",
-          position: props.name === "daughter" && "relative",
+          position: "relative",
           width: "100%",
-          height: "320px",
+          height: "250px",
         }}
       >
         {props.name === "daughter" &&
@@ -1065,10 +990,10 @@ const BlindManDaughter = (props) => {
           style={{
             width: "100%",
             zIndex: props.name === "daughter" && "-1",
-            position: props.name === "daughter" && "absolute",
-            top: props.name === "daughter" && "0",
-            bottom: props.name === "daughter" && "0",
-            margin: props.name === "daughter" && "auto 0",
+            position: "absolute",
+            top: "0",
+            bottom: "0",
+            margin: "auto 0",
             boxShadow:
               props.name === "daughter"
                 ? "0px 0px 0px 2px #810CA8," +
@@ -1083,12 +1008,9 @@ const BlindManDaughter = (props) => {
 
       <section
         style={{
-          display: "grid",
-          gridTemplateRows:
-            props.name === "daughter" && props.indexCorrect !== 16
-              ? "4fr"
-              : "50% 50%",
-          height: "213px",
+          display: "flex",
+          flexFlow: "row wrap",
+          height: "290px",
           placeContent:
             props.name === "daughter" && props.indexCorrect !== 16 && "center",
           placeItems:
@@ -1102,7 +1024,7 @@ const BlindManDaughter = (props) => {
               : "0px 0px 0px 2px #86135c," +
                 "0px 0px 0px 5px #2C061F," +
                 "0px 0px 5px 9px #250018",
-          marginTop: "10px",
+          overflow: "hidden",
         }}
       >
         {props.name === "daughter" && props.indexCorrect !== 16 ? (
@@ -1127,6 +1049,7 @@ const BlindManDaughter = (props) => {
                 display: "flex",
                 placeContent: "space-evenly",
                 placeItems: "center",
+                height: "120px",
               }}
             >
               <div
@@ -1136,7 +1059,7 @@ const BlindManDaughter = (props) => {
                   placeContent: "center",
                   placeItems: "center",
                   height: "100%",
-                  width: "100%",
+                  width: "175px",
                   borderRight:
                     props.name === "daughter"
                       ? "2px solid #810CA8"
@@ -1263,7 +1186,7 @@ const BlindManDaughter = (props) => {
                   placeContent: "center",
                   placeItems: "center",
                   height: "100%",
-                  width: "100%",
+                  width: "175px",
                   padding: props.indexCorrect === 16 && "0 5px",
                   fontSize: props.indexCorrect !== 16 && "2rem",
                 }}
@@ -1317,15 +1240,15 @@ const BlindManDaughter = (props) => {
             <div
               style={{
                 display: props.indexCorrect !== 16 && "flex",
+                flex: "1 0 100%",
                 placeContent: props.indexCorrect !== 16 && "center",
                 placeItems: props.indexCorrect !== 16 && "center",
                 fontSize: props.indexCorrect !== 16 && "3rem",
+                height: "58%",
                 borderTop:
                   props.name === "daughter"
                     ? "2px solid #810CA8"
                     : "2px solid #86135c",
-                width: "100%",
-                height: "100%",
               }}
             >
               {props.indexCorrect !== 16 ? (
@@ -1349,34 +1272,327 @@ const BlindManDaughter = (props) => {
                   className="game2Children-p"
                   style={{
                     color: props.name === "daughter" ? "#810ca8" : "#86135c",
-                    fontSize: "0.9rem",
+                    fontSize: "0.85rem",
                     fontWeight: "700",
                     textAlign: "justify",
-                    wordBreak: "break-word",
                     width: "97.5%",
                     padding: "5px",
                     animation:
                       props.indexCorrect === 16 && "fade-entrance 2000ms ease",
                   }}
                 >
-                  {props.name === "daughter" && localStorage.sanity === "chill"
+                  {props.name === "daughter" &&
+                  ((localStorage.sanity === "chill" &&
+                    Number(localStorage.chillLevel) === 1) ||
+                    (localStorage.sanity === "crazy" &&
+                      Number(localStorage.crazyLevel) === 1))
+                    ? `The eldest daughter, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }, is a natural leader. With a strong sense of responsibility, she often takes charge of family matters and sets an example for her younger siblings.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 2) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 2))
+                    ? `Following closely behind, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is known for her intelligence and curiosity. Always with a book in hand, she has a keen interest in learning and exploring new ideas.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 3) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 3))
+                    ? `The third sister, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }, is an artist at heart. She expresses herself through various forms of creativity, whether it's painting, writing, or playing a musical instrument.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 4) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 4))
                     ? `${
-                        daughters.Name[Number(localStorage.chillLevel) - 1]
-                      } is the breadwinner of the family. She studied and worked so hard to become a successful person.`
-                    : props.name !== "daughter" &&
-                      localStorage.sanity === "chill" &&
-                      `The Blind Man loves ${
-                        daughters.Name[Number(localStorage.chillLevel) - 1]
-                      } so much because she's kind and resembles her late mother.`}
-                  {props.name === "daughter" && localStorage.sanity === "crazy"
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is the athletic one of the bunch. Her energy is contagious, and she excels in sports, inspiring her sisters to stay active and healthy.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 5) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 5))
+                    ? `With a calm and collected demeanor, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is often the peacemaker among her siblings. She has a natural ability to mediate conflicts and bring harmony to the family.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 6) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 6))
                     ? `${
-                        daughters.Name[Number(localStorage.crazyLevel) - 1]
-                      } is the breadwinner of the family. She studied and worked so hard to become a successful person.`
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is the social butterfly of the family. She has a wide circle of friends and is always eager to meet new people. Her outgoing nature adds a vibrant energy to family gatherings.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 7) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 7))
+                    ? `True to her name, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is known for her elegance and poise. She possesses a natural gracefulness in her movements and has a sophisticated taste that influences the family's style.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 8) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 8))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } has a love for animals and nature. Whether it's caring for pets or spending time outdoors, she has a deep connection with the environment and encourages her sisters to appreciate the world around them.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 9) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 9))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is the adventurous spirit. Always seeking excitement, she enjoys trying new things and taking risks. Her daring nature brings an element of unpredictability to family activities.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 10) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 10))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is the nurturing sister, often taking care of others. Her compassion and empathy make her a reliable source of support for her siblings during both good times and challenging moments.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 11) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 11))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } is the tech-savvy sister, with a passion for gadgets and innovation. Her interest in the digital world often leads the family into exploring the latest technologies together.`
+                    : props.name === "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 12) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 12))
+                    ? `The youngest of the sisters, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }, brings a sense of innocence and joy to the family. Her playful spirit and wide-eyed wonder remind everyone to appreciate the simple joys of life.`
                     : props.name !== "daughter" &&
-                      localStorage.sanity === "crazy" &&
-                      `The Blind Man loves ${
-                        daughters.Name[Number(localStorage.crazyLevel) - 1]
-                      } so much because she's kind and resembles her late mother.`}
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 1) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 1))
+                    ? `The firstborn and natural leader, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } holds a special place in the blind man's heart. He sees her as a responsible and reliable ally in raising and guiding her younger sisters. They share a bond of mutual respect and trust.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 2) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 2))
+                    ? `The blind man admires ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s intellect and curiosity. He encourages her love for learning and values their deep conversations, relishing in the shared pursuit of knowledge.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 3) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 3))
+                    ? `Recognizing ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s artistic talents, the blind man takes pride in her creativity. He supports her passion for the arts, providing encouragement and a nurturing environment for her to express herself.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 4) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 4))
+                    ? `The athletic prowess of ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } brings joy to the blind man. He cheers her on at sports events, reveling in the energy and determination she brings to her pursuits.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 5) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 5))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }, the peacemaker, is a source of comfort for the blind man. He appreciates her ability to mediate conflicts and values her calming influence on the family dynamics.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 6) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 6))
+                    ? `The blind man enjoys ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s outgoing nature. Together, they attend social events and family gatherings, celebrating the connections she effortlessly builds with others.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 7) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 7))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s elegance resonates with the blind man. They share refined tastes, attending cultural events together and fostering a mutual appreciation for beauty and sophistication.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 8) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 8))
+                    ? `The blind man connects with ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } through their shared love for nature. They embark on outdoor adventures together, bonding over hikes, camping trips, and the joy of caring for animals.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 9) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 9))
+                    ? `The blind man admires ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s adventurous spirit. He encourages her to explore new horizons, embracing her willingness to take risks and appreciating the excitement she brings to the family.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 10) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 10))
+                    ? `${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s nurturing qualities are a source of comfort for the blind man. He relies on her compassionate nature to create a warm and supportive family environment.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 11) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 11))
+                    ? `The blind man is intrigued by ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      }'s tech-savvy interests. They explore the world of technology together, bonding over a shared fascination with innovation and staying current with the latest advancements.`
+                    : props.name !== "daughter" &&
+                      ((localStorage.sanity === "chill" &&
+                        Number(localStorage.chillLevel) === 12) ||
+                        (localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyLevel) === 12)) &&
+                      `As the youngest, ${
+                        daughters.Name[
+                          localStorage.sanity === "chill"
+                            ? Number(localStorage.chillLevel) - 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyLevel) - 1
+                        ]
+                      } brings a special joy to the blind man's life. He cherishes the innocence and playfulness she adds to the family dynamic, relishing in the role of a loving and protective parent.`}
                 </p>
               )}
             </div>
@@ -1401,7 +1617,7 @@ const CheckerContainer = (props) => {
           props.currentIndex.current[props.id] === props.id ||
           props.isFailed ||
           (props.game >= 0 &&
-            props.game <= 1000 &&
+            props.game <= 16 &&
             props.countUp.current !== 10000)
             ? "#000c1a"
             : "#e0fbfc",
@@ -1411,9 +1627,9 @@ const CheckerContainer = (props) => {
             ? "#98c1d9"
             : props.isFailed ||
               (props.game >= 0 &&
-                props.game <= 1000 &&
+                props.game <= 16 &&
                 props.countUp.current !== 10000 &&
-                Math.trunc(props.game / 62.5) === props.id)
+                props.game === props.id)
             ? "#ee6c4d"
             : props.countUp.current === 10000
             ? "transparent"
@@ -1426,7 +1642,7 @@ const CheckerContainer = (props) => {
             : props.currentIndex.current[props.id] === props.id &&
               props.indexCorrect.current < 16 &&
               "background-change2 800ms ease",
-        transition: props.countUp.current < 999 && "500ms",
+        transition: props.countUp.current < 16 && "500ms",
       }}
     >
       {props.array}
