@@ -875,7 +875,7 @@ export default function PlayForgetMe() {
           }}
         >
           The blind man is in a predicament and needs your help. Every session
-          has a corresponding challenge. The first sixteen(16) seconds will be
+          has a corresponding challenge. The first fifteen(15) seconds will be
           your window to memorize the sequence based on the current challenge.
           The next sixty(60) seconds is your limit to solve the problem. The
           Pills Order will be your guideline to gain clues for his daughter.
