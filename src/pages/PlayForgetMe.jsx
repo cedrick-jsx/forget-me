@@ -112,6 +112,60 @@ const arrayGame = {
     "O",
     "P",
   ],
+  chillEven: [
+    "2",
+    "4",
+    "6",
+    "8",
+    "10",
+    "12",
+    "14",
+    "16",
+    "18",
+    "20",
+    "22",
+    "24",
+    "26",
+    "28",
+    "30",
+    "32",
+  ],
+  chillConsonant: [
+    "B",
+    "C",
+    "D",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+  ],
+  chillOdd: [
+    "1",
+    "3",
+    "5",
+    "7",
+    "9",
+    "11",
+    "13",
+    "15",
+    "17",
+    "19",
+    "21",
+    "23",
+    "25",
+    "27",
+    "29",
+    "31",
+  ],
   chillMixed: [
     "A16",
     "B15",
@@ -129,6 +183,24 @@ const arrayGame = {
     "N3",
     "O2",
     "P1",
+  ],
+  chillHard: [
+    "3",
+    "B",
+    "7",
+    "K",
+    "9",
+    "E",
+    "2",
+    "N",
+    "6",
+    "M",
+    "1",
+    "L",
+    "8",
+    "J",
+    "0",
+    "X",
   ],
   crazyNumber: [
     "I",
@@ -247,11 +319,39 @@ export default function PlayForgetMe() {
               contentChecker = [...arrayGame.chillLetter];
             break;
           }
-          default: {
+          case 3: {
+            randomNumber.current =
+              arrayGame.chillEven[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillEven];
+            break;
+          }
+          case 4: {
+            randomNumber.current =
+              arrayGame.chillConsonant[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillConsonant];
+            break;
+          }
+          case 5: {
+            randomNumber.current =
+              arrayGame.chillOdd[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillOdd];
+            break;
+          }
+          case 6: {
             randomNumber.current =
               arrayGame.chillMixed[Math.floor(Math.random() * 16)];
             if (contentChecker.length === 0)
               contentChecker = [...arrayGame.chillMixed];
+            break;
+          }
+          default: {
+            randomNumber.current =
+              arrayGame.chillHard[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillHard];
             break;
           }
         }

@@ -85,8 +85,31 @@ const ButtonMain = (props) => {
   };
 
   return (
-    <button className="button-main" onClick={navigatePage}>
-      <div className="container-buttonChildren">{props.children}</div>
+    <button
+      disabled={
+        props.buttonName === "crazy" &&
+        Number(localStorage.chillCurrentLevel < 13) &&
+        true
+      }
+      className="button-main"
+      onClick={navigatePage}
+    >
+      <div
+        disabled={
+          props.buttonName === "crazy" &&
+          Number(localStorage.chillCurrentLevel < 13) &&
+          true
+        }
+        style={{
+          pointerEvents:
+            props.buttonName === "crazy" &&
+            Number(localStorage.chillCurrentLevel < 13) &&
+            "none",
+        }}
+        className="container-buttonChildren"
+      >
+        {props.children}
+      </div>
     </button>
   );
 };

@@ -301,6 +301,7 @@ body {
   cursor: pointer;
 }
 
+.button-main:disabled,
 .button-main2:disabled {
   cursor: not-allowed;
 }
@@ -381,7 +382,7 @@ body {
   animation: fade-entrance 2000ms ease, move-down 2000ms ease;
 }
 
-.container-buttonChildren:hover {
+.container-buttonChildren:not(:disabled):hover {
   color: #00fda2;
   background: #00fda2;
   background-clip: text;
@@ -397,7 +398,7 @@ body {
   transform: scale(1.1);
 }
 
-.container-buttonChildren:hover:active {
+.container-buttonChildren:not(:disabled):hover:active {
   color: #ff0060;
   background: #ff0060;
   background-clip: text;
