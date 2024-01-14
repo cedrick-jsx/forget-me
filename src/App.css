@@ -26,14 +26,14 @@
 }
 
 body {
-  display: flex;
-  place-content: center;
   background: url("./assets/img/background/bg.jpg") no-repeat center fixed;
   background-size: cover;
 }
 
 .container-main {
-  width: 500px;
+  display: flex;
+  place-content: center;
+  width: 100%;
   animation: fade-entrance 1000ms;
 }
 

@@ -19,7 +19,29 @@ export default function App() {
 }
 
 const ContainerMain = (props) => {
-  return <section className="container-main">{props.children}</section>;
+  return (
+    <section
+      className="container-main"
+      style={{
+        height: props.value !== "level" && "90vh",
+        placeItems: props.value !== "story" && "center",
+      }}
+    >
+      {props.children}
+    </section>
+  );
+};
+
+const ContainerSub = (props) => {
+  return (
+    <div
+      style={{
+        width: props.value === "story" ? "1000px" : "500px",
+      }}
+    >
+      {props.children}
+    </div>
+  );
 };
 
 const ContainerHeader = (props) => {
@@ -88,7 +110,8 @@ const ButtonMain = (props) => {
     <button
       disabled={
         props.buttonName === "crazy" &&
-        Number(localStorage.chillCurrentLevel < 13) &&
+        (Number(localStorage.chillCurrentLevel < 13) ||
+          !localStorage.chillCurrentLevel) &&
         true
       }
       className="button-main"
@@ -97,13 +120,15 @@ const ButtonMain = (props) => {
       <div
         disabled={
           props.buttonName === "crazy" &&
-          Number(localStorage.chillCurrentLevel < 13) &&
+          (Number(localStorage.chillCurrentLevel < 13) ||
+            !localStorage.chillCurrentLevel) &&
           true
         }
         style={{
           pointerEvents:
             props.buttonName === "crazy" &&
-            Number(localStorage.chillCurrentLevel < 13) &&
+            (Number(localStorage.chillCurrentLevel < 13) ||
+              !localStorage.chillCurrentLevel) &&
             "none",
         }}
         className="container-buttonChildren"
@@ -116,6 +141,7 @@ const ButtonMain = (props) => {
 
 export {
   ContainerMain,
+  ContainerSub,
   ContainerHeader,
   ContainerButton,
   ButtonMain,

@@ -6,6 +6,7 @@ import {
   ContainerGame2,
   ContainerButton2,
   ContainerNextLevel,
+  ContainerMain,
 } from "../App.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -166,6 +167,24 @@ const arrayGame = {
     "29",
     "31",
   ],
+  chillLetterZ: [
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ],
   chillMixed: [
     "A16",
     "B15",
@@ -184,23 +203,95 @@ const arrayGame = {
     "O2",
     "P1",
   ],
-  chillHard: [
-    "3",
-    "B",
-    "7",
-    "K",
-    "9",
-    "E",
-    "2",
-    "N",
-    "6",
-    "M",
-    "1",
-    "L",
-    "8",
-    "J",
-    "0",
-    "X",
+  chillMixed2: [
+    "D4",
+    "7G",
+    "A1",
+    "F6",
+    "2K",
+    "B9",
+    "E5",
+    "J10",
+    "H8",
+    "3C",
+    "L12",
+    "I11",
+    "5E",
+    "P16",
+    "M13",
+    "N14",
+  ],
+  chillMixed3: [
+    "6P",
+    "Z26",
+    "T20",
+    "1A",
+    "D4",
+    "C29",
+    "H8",
+    "X24",
+    "O15",
+    "N14",
+    "G7",
+    "E5",
+    "Y25",
+    "Q17",
+    "F6",
+    "K11",
+  ],
+  chillMixed4: [
+    "7T",
+    "A79",
+    "8S",
+    "B9",
+    "G7",
+    "P42",
+    "F6",
+    "M13",
+    "3C",
+    "D4",
+    "X24",
+    "E5",
+    "H8",
+    "N14",
+    "J10",
+    "K11",
+  ],
+  chillMixed5: [
+    "D4",
+    "B9",
+    "9Q",
+    "K11",
+    "H8",
+    "F6",
+    "G7",
+    "O15",
+    "C29",
+    "1A",
+    "2K",
+    "E5",
+    "N14",
+    "P42",
+    "J10",
+    "L12",
+  ],
+  chillMixed6: [
+    "7G",
+    "O15",
+    "P42",
+    "3C",
+    "M13",
+    "B9",
+    "L12",
+    "E5",
+    "D4",
+    "I9",
+    "N14",
+    "J10",
+    "G7",
+    "2K",
+    "H8",
+    "A27",
   ],
   crazyNumber: [
     "I",
@@ -258,8 +349,7 @@ const arrayGame = {
   ],
 };
 
-let contentChecker = [],
-  timerGame = 0;
+let contentChecker = [];
 
 export default function PlayForgetMe() {
   const navigate = useNavigate();
@@ -278,7 +368,6 @@ export default function PlayForgetMe() {
   const [isDisable, setIsDisable] = useState(true);
   const [isNextLevel, setIsNextLevel] = useState(false);
   const [isShake, setIsShake] = useState(false);
-  const [isTimer, setIsTimer] = useState(true);
 
   const ResetGame = () => {
     contentChecker = [];
@@ -290,15 +379,14 @@ export default function PlayForgetMe() {
     indexCorrect.current = 0;
     countUp.current = 0;
     countDown.current = 0;
-    setGame(0);
+    setGame(() => 99);
+    setGame(() => 0);
     setIsRandomDone(true);
     setIsTransparent(false);
     setIsFailed(false);
     setIsDisable(true);
     setIsNextLevel(false);
     setIsShake(false);
-    setIsTimer(true);
-    clearInterval(timerGame);
   };
 
   if (isRandomDone) {
@@ -342,16 +430,51 @@ export default function PlayForgetMe() {
           }
           case 6: {
             randomNumber.current =
+              arrayGame.chillLetterZ[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillLetterZ];
+            break;
+          }
+          case 7: {
+            randomNumber.current =
               arrayGame.chillMixed[Math.floor(Math.random() * 16)];
             if (contentChecker.length === 0)
               contentChecker = [...arrayGame.chillMixed];
             break;
           }
+          case 8: {
+            randomNumber.current =
+              arrayGame.chillMixed2[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillMixed2];
+            break;
+          }
+          case 9: {
+            randomNumber.current =
+              arrayGame.chillMixed3[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillMixed3];
+            break;
+          }
+          case 10: {
+            randomNumber.current =
+              arrayGame.chillMixed4[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillMixed4];
+            break;
+          }
+          case 11: {
+            randomNumber.current =
+              arrayGame.chillMixed5[Math.floor(Math.random() * 16)];
+            if (contentChecker.length === 0)
+              contentChecker = [...arrayGame.chillMixed5];
+            break;
+          }
           default: {
             randomNumber.current =
-              arrayGame.chillHard[Math.floor(Math.random() * 16)];
+              arrayGame.chillMixed6[Math.floor(Math.random() * 16)];
             if (contentChecker.length === 0)
-              contentChecker = [...arrayGame.chillHard];
+              contentChecker = [...arrayGame.chillMixed6];
             break;
           }
         }
@@ -402,40 +525,6 @@ export default function PlayForgetMe() {
     setIsRandomDone(false);
   }
 
-  if (isTimer) {
-    clearInterval(timerGame);
-    timerGame = setInterval(() => {
-      if (countUp.current < 16) {
-        countUp.current += 1;
-        setGame(countUp.current);
-        if (countUp.current === 16) {
-          countUp.current = 10000;
-          countDown.current = 60;
-          setIsTransparent(true);
-          setIsDisable(false);
-          setGame(countDown.current);
-        }
-      } else if (countDown.current > 0) {
-        if (indexCorrect.current === 16) {
-          localStorage.setItem("countDown", countDown.current);
-          countDown.current = 0;
-          setIsNextLevel(true);
-        } else {
-          countDown.current -= 1;
-          setGame(countDown.current);
-          if (countDown.current === 0) {
-            countDown.current = 0;
-            setIsTransparent(false);
-            setIsFailed(true);
-            setIsDisable(true);
-            setGame("Zero");
-          }
-        }
-      }
-    }, 1000);
-    setIsTimer(false);
-  }
-
   useEffect(() => {
     if (isShake) {
       const shakeReset = setTimeout(() => {
@@ -445,444 +534,480 @@ export default function PlayForgetMe() {
     }
   }, [isShake]);
 
+  useEffect(() => {
+    const timerGame = setTimeout(() => {
+      if (countUp.current < 16) {
+        countUp.current += 1;
+        setGame(() => countUp.current);
+        if (countUp.current === 16) {
+          countUp.current = 10000;
+          countDown.current = 60;
+          setIsTransparent(true);
+          setIsDisable(false);
+          setGame(() => countDown.current);
+        }
+      } else if (countDown.current > 0) {
+        if (indexCorrect.current === 16) {
+          localStorage.setItem("countDown", countDown.current);
+          countDown.current = 0;
+          setIsNextLevel(true);
+        } else {
+          countDown.current -= 1;
+          setGame(() => countDown.current);
+          if (countDown.current === 0) {
+            countDown.current = 0;
+            setIsTransparent(false);
+            setIsFailed(true);
+            setIsDisable(true);
+            setGame(() => "Zero");
+          }
+        }
+      }
+    }, 1000);
+
+    return () => clearTimeout(timerGame);
+  }, [game]);
+
   return (
-    <section
-      style={{
-        width: "1200px",
-        margin: "30px 0",
-      }}
-    >
+    <ContainerMain value="level">
       <section
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
+          width: "1200px",
+          marginTop: "50px",
         }}
       >
-        <BlindManDaughter
-          name="blind"
-          isFailed={isFailed}
-          indexCorrect={indexCorrect.current}
-          temporaryArray={temporaryArray.current}
-          correctIndex={correctIndex.current}
-        />
+        <section
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <BlindManDaughter
+            name="blind"
+            isFailed={isFailed}
+            indexCorrect={indexCorrect.current}
+            temporaryArray={temporaryArray.current}
+            correctIndex={correctIndex.current}
+          />
 
-        <BlindManDaughter
-          name="daughter"
-          isFailed={isFailed}
-          indexCorrect={indexCorrect.current}
-          temporaryArray={temporaryArray.current}
-          correctIndex={correctIndex.current}
-        />
+          <BlindManDaughter
+            name="daughter"
+            isFailed={isFailed}
+            indexCorrect={indexCorrect.current}
+            temporaryArray={temporaryArray.current}
+            correctIndex={correctIndex.current}
+          />
 
-        <ContainerGame>
-          <ContainerHeader2>
-            <h1 className="header2-h1">Sanity</h1>
-            <h1 className="header2-h1">{localStorage.sanity}</h1>
-            <h1 className="header2-h1">Session</h1>
-            <h1 className="header2-h1">
-              {localStorage.sanity === "crazy"
-                ? localStorage.crazyLevel
-                : localStorage.chillLevel}
-            </h1>
-            <h1 className="header2-h1">Stress</h1>
-            <h1
-              className="header2-h1"
-              style={{
-                filter:
-                  isShake &&
-                  "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)" +
+          <ContainerGame>
+            <ContainerHeader2>
+              <h1 className="header2-h1">Sanity</h1>
+              <h1 className="header2-h1">{localStorage.sanity}</h1>
+              <h1 className="header2-h1">Session</h1>
+              <h1 className="header2-h1">
+                {localStorage.sanity === "crazy"
+                  ? localStorage.crazyLevel
+                  : localStorage.chillLevel}
+              </h1>
+              <h1 className="header2-h1">Stress</h1>
+              <h1
+                className="header2-h1"
+                style={{
+                  filter:
+                    isShake &&
                     "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)" +
-                    "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)",
-              }}
-            >
-              {game}
-            </h1>
-          </ContainerHeader2>
+                      "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)" +
+                      "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)",
+                }}
+              >
+                {game === 99 ? 0 : game}
+              </h1>
+            </ContainerHeader2>
 
-          {temporaryArray.current.map((array, id) => (
-            <button
-              key={id}
-              className="button-main2"
-              disabled={isDisable}
-              style={{
-                backgroundColor:
-                  game >= 0 &&
-                  game <= 16 &&
-                  countUp.current !== 10000 &&
-                  contentChecker[game] === array
-                    ? "#ee6c4d"
-                    : correctIndex.current[id] !== id && isFailed
-                    ? "#ee6c4d"
-                    : correctIndex.current[id] !== id && isTransparent
-                    ? "transparent"
-                    : correctIndex.current[id] === id
-                    ? "#98c1d9"
-                    : countUp.current !== 10000 && "#98c1d9",
-                boxShadow:
-                  game >= 0 &&
-                  game <= 16 &&
-                  countUp.current !== 10000 &&
-                  contentChecker[game] === array
-                    ? "0px 0px 5px 5px #000c1a"
-                    : correctIndex.current[id] !== id && isFailed
-                    ? "-3px 3px 0px 0px #000c1a," +
-                      "0px 0px 2px 2px #000c1a," +
-                      "-6px 6px 0px 0px #ee6c4d," +
-                      "-3px 3px 2px 2px #000c1a," +
-                      "-6px 6px 2px 2px #000c1a"
-                    : correctIndex.current[id] === id
-                    ? "-3px 3px 0px 0px #000c1a," +
-                      "0px 0px 2px 2px #000c1a," +
-                      "-6px 6px 0px 0px #98c1d9," +
-                      "-3px 3px 2px 2px #000c1a," +
-                      "-6px 6px 2px 2px #000c1a"
-                    : countUp.current !== 10000
-                    ? "-3px 3px 0px 0px #000c1a," +
-                      "0px 0px 2px 2px #000c1a," +
-                      "-6px 6px 0px 0px #98c1d9," +
-                      "-3px 3px 2px 2px #000c1a," +
-                      "-6px 6px 2px 2px #000c1a"
-                    : correctIndex.current[id] !== id &&
-                      isTransparent &&
-                      "none",
-                transform:
-                  game >= 0 &&
-                  game <= 16 &&
-                  countUp.current !== 10000 &&
-                  contentChecker[game] === array &&
-                  "scale(0.9)",
-                animation:
-                  correctIndex.current[id] === id &&
-                  indexCorrect.current !== 16 &&
-                  !isFailed
-                    ? "move-down 800ms"
-                    : correctIndex.current[id] !== id &&
-                      isFailed &&
-                      "fa-bounce 1500ms ease infinite both alternate",
-                pointerEvents: correctIndex.current[id] === id && "none",
-                transition: countUp.current < 16 && "500ms",
-              }}
-              onClick={() => {
-                if (contentChecker[indexCorrect.current] === array) {
-                  correctIndex.current[id] = id;
-                  currentIndex.current[indexCorrect.current] =
-                    indexCorrect.current;
-                  indexCorrect.current++;
-                } else {
-                  if (countDown.current <= 5) {
-                    countDown.current = 1;
-                  } else {
-                    setIsShake(true);
-                    countDown.current -= 5;
-                  }
-                }
-              }}
-            >
-              <p className="buttonChildren2-p">
-                {isTransparent && correctIndex.current[id] !== id ? (
-                  <span
-                    className="pills-icon"
-                    style={{
-                      width: "100%",
-                      fontSize: "2.5rem",
-                      animation:
-                        isShake &&
-                        correctIndex.current[id] !== id &&
-                        "fa-shake 100ms ease",
-                      filter:
-                        isShake &&
-                        "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)",
-                      transition: !isShake && "100ms",
-                    }}
-                  >
-                    💊
-                  </span>
-                ) : (
-                  array
-                )}
-              </p>
-            </button>
-          ))}
-
-          <ContainerGame2>
-            <div
-              style={{
-                width: "100%",
-                boxShadow: "0px 0px 0px 1px inset #372f85",
-                overflow: "hidden",
-              }}
-            >
-              <p
-                className="pills-order"
+            {temporaryArray.current.map((array, id) => (
+              <button
+                key={id}
+                className="button-main2"
+                disabled={isDisable}
                 style={{
-                  fontSize: "1.3rem",
-                  fontWeight: "700",
-                  animation:
+                  backgroundColor:
+                    game >= 0 &&
+                    game <= 16 &&
                     countUp.current !== 10000 &&
-                    "fa-fade 1000ms linear infinite",
-                }}
-              >
-                {countUp.current !== 10000
-                  ? "Memorize in Order"
-                  : "Take Pills in Order"}
-              </p>
-            </div>
-            <section
-              style={{
-                display: "flex",
-                flexFlow: "row wrap",
-              }}
-            >
-              {contentChecker.map((array, id) =>
-                CheckerContainer({
-                  array,
-                  id,
-                  currentIndex,
-                  indexCorrect,
-                  countUp,
-                  isFailed,
-                  game,
-                })
-              )}
-            </section>
-          </ContainerGame2>
-
-          {!isNextLevel ? (
-            <ContainerButton2>
-              <button
-                className="button-main"
-                style={{
-                  width: "185px",
-                }}
-                onClick={ResetGame}
-              >
-                <div
-                  className="container-buttonChildren"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "30% 30% 15%",
-                    placeContent: "center",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faRotate} />
-                  <p
-                    className="buttonChildren-p"
-                    style={{
-                      wordSpacing: "5px",
-                      letterSpacing: "3px",
-                    }}
-                  >
-                    Retry
-                  </p>
-                </div>
-              </button>
-
-              <button
-                className="button-main"
-                style={{
-                  width: "185px",
+                    contentChecker[game] === array
+                      ? "#ee6c4d"
+                      : correctIndex.current[id] !== id && isFailed
+                      ? "#ee6c4d"
+                      : correctIndex.current[id] !== id && isTransparent
+                      ? "transparent"
+                      : correctIndex.current[id] === id
+                      ? "#98c1d9"
+                      : countUp.current !== 10000 && "#98c1d9",
+                  boxShadow:
+                    game >= 0 &&
+                    game <= 16 &&
+                    countUp.current !== 10000 &&
+                    contentChecker[game] === array
+                      ? "0px 0px 5px 5px #000c1a"
+                      : correctIndex.current[id] !== id && isFailed
+                      ? "-3px 3px 0px 0px #000c1a," +
+                        "0px 0px 2px 2px #000c1a," +
+                        "-6px 6px 0px 0px #ee6c4d," +
+                        "-3px 3px 2px 2px #000c1a," +
+                        "-6px 6px 2px 2px #000c1a"
+                      : correctIndex.current[id] === id
+                      ? "-3px 3px 0px 0px #000c1a," +
+                        "0px 0px 2px 2px #000c1a," +
+                        "-6px 6px 0px 0px #98c1d9," +
+                        "-3px 3px 2px 2px #000c1a," +
+                        "-6px 6px 2px 2px #000c1a"
+                      : countUp.current !== 10000
+                      ? "-3px 3px 0px 0px #000c1a," +
+                        "0px 0px 2px 2px #000c1a," +
+                        "-6px 6px 0px 0px #98c1d9," +
+                        "-3px 3px 2px 2px #000c1a," +
+                        "-6px 6px 2px 2px #000c1a"
+                      : correctIndex.current[id] !== id &&
+                        isTransparent &&
+                        "none",
+                  transform:
+                    game >= 0 &&
+                    game <= 16 &&
+                    countUp.current !== 10000 &&
+                    contentChecker[game] === array &&
+                    "scale(0.9)",
+                  animation:
+                    correctIndex.current[id] === id &&
+                    indexCorrect.current !== 16 &&
+                    !isFailed
+                      ? "move-down 800ms"
+                      : correctIndex.current[id] !== id &&
+                        isFailed &&
+                        "fa-bounce 1500ms ease infinite both alternate",
+                  pointerEvents: correctIndex.current[id] === id && "none",
+                  transition: countUp.current < 16 && "500ms",
                 }}
                 onClick={() => {
-                  ResetGame();
-                  navigate("/Category", { replace: true });
+                  if (contentChecker[indexCorrect.current] === array) {
+                    correctIndex.current[id] = id;
+                    currentIndex.current[indexCorrect.current] =
+                      indexCorrect.current;
+                    indexCorrect.current++;
+                  } else {
+                    if (countDown.current <= 5) {
+                      countDown.current = 1;
+                    } else {
+                      setIsShake(true);
+                      countDown.current -= 5;
+                    }
+                  }
                 }}
               >
-                <div
-                  className="container-buttonChildren"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "40% 30% 20%",
-                    placeContent: "center",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faRightToBracket} />
-                  <p
-                    className="buttonChildren-p"
-                    style={{
-                      wordSpacing: "5px",
-                      letterSpacing: "3px",
-                    }}
-                  >
-                    Return
-                  </p>
-                </div>
+                <p className="buttonChildren2-p">
+                  {isTransparent && correctIndex.current[id] !== id ? (
+                    <span
+                      className="pills-icon"
+                      style={{
+                        width: "100%",
+                        fontSize: "2.5rem",
+                        animation:
+                          isShake &&
+                          correctIndex.current[id] !== id &&
+                          "fa-shake 100ms ease",
+                        filter:
+                          isShake &&
+                          "drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060) drop-shadow(0px 0px 1px #ff0060)",
+                        transition: !isShake && "100ms",
+                      }}
+                    >
+                      💊
+                    </span>
+                  ) : (
+                    array
+                  )}
+                </p>
               </button>
-            </ContainerButton2>
-          ) : (
-            <ContainerNextLevel>
-              <button
-                className="button-main"
+            ))}
+
+            <ContainerGame2>
+              <div
                 style={{
                   width: "100%",
-                }}
-                onClick={() => {
-                  if (localStorage.sanity === "chill") {
-                    if (
-                      Number(localStorage.chillCurrentLevel) < 13 &&
-                      Number(localStorage.chillLevel) ===
-                        Number(localStorage.chillCurrentLevel)
-                    )
-                      localStorage.setItem(
-                        "chillCurrentLevel",
-                        Number(localStorage.chillCurrentLevel) + 1
-                      );
-                  } else if (localStorage.sanity === "crazy") {
-                    if (
-                      Number(localStorage.crazyCurrentLevel) < 13 &&
-                      Number(localStorage.crazyLevel) ===
-                        Number(localStorage.crazyCurrentLevel)
-                    )
-                      localStorage.setItem(
-                        "crazyCurrentLevel",
-                        Number(localStorage.crazyCurrentLevel) + 1
-                      );
-                  }
-                  localStorage.removeItem("countDown");
-                  ResetGame();
-                  if (localStorage.sanity === "chill")
-                    if (Number(localStorage.chillCurrentLevel) === 13)
-                      navigate("/Story", { replace: true });
-                    else navigate("/Level", { replace: true });
-                  if (localStorage.sanity === "crazy")
-                    if (Number(localStorage.crazyCurrentLevel) === 13)
-                      navigate("/Story", { replace: true });
-                    else navigate("/Level", { replace: true });
+                  boxShadow: "0px 0px 0px 1px inset #372f85",
+                  overflow: "hidden",
                 }}
               >
-                <div
-                  className="container-buttonChildren"
+                <p
+                  className="pills-order"
                   style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      localStorage.sanity === "chill"
-                        ? localStorage.chillCurrentLevel < 12 && "38% 10% 10%"
-                        : localStorage.sanity === "crazy" &&
-                          localStorage.crazyCurrentLevel < 12 &&
-                          "38% 10% 10%",
-                    placeContent: "center",
+                    fontSize: "1.3rem",
+                    fontWeight: "700",
+                    animation:
+                      countUp.current !== 10000 &&
+                      "fa-fade 1000ms linear infinite",
                   }}
                 >
-                  {(localStorage.sanity === "chill" &&
-                    Number(localStorage.chillCurrentLevel) < 12) ||
-                  (localStorage.sanity === "crazy" &&
-                    Number(localStorage.crazyCurrentLevel) < 12) ? (
-                    <>
-                      <p className="buttonChildren-p">Next Session</p>
-                      <FontAwesomeIcon
-                        icon={faAngleDoubleRight}
-                        style={{
-                          fontSize: "1.8rem",
-                          animation: "fa-beat-fade 1500ms linear infinite",
-                        }}
-                      />
+                  {countUp.current !== 10000
+                    ? "Memorize in Order"
+                    : "Take Pills in Order"}
+                </p>
+              </div>
+              <section
+                style={{
+                  display: "flex",
+                  flexFlow: "row wrap",
+                }}
+              >
+                {contentChecker.map((array, id) =>
+                  CheckerContainer({
+                    array,
+                    id,
+                    currentIndex,
+                    indexCorrect,
+                    countUp,
+                    isFailed,
+                    game,
+                  })
+                )}
+              </section>
+            </ContainerGame2>
+
+            {!isNextLevel ? (
+              <ContainerButton2>
+                <button
+                  className="button-main"
+                  style={{
+                    width: "185px",
+                  }}
+                  onClick={ResetGame}
+                >
+                  <div
+                    className="container-buttonChildren"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "30% 30% 15%",
+                      placeContent: "center",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faRotate} />
+                    <p
+                      className="buttonChildren-p"
+                      style={{
+                        wordSpacing: "5px",
+                        letterSpacing: "3px",
+                      }}
+                    >
+                      Retry
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  className="button-main"
+                  style={{
+                    width: "185px",
+                  }}
+                  onClick={() => {
+                    ResetGame();
+                    navigate("/Category", { replace: true });
+                  }}
+                >
+                  <div
+                    className="container-buttonChildren"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "40% 30% 20%",
+                      placeContent: "center",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faRightToBracket} />
+                    <p
+                      className="buttonChildren-p"
+                      style={{
+                        wordSpacing: "5px",
+                        letterSpacing: "3px",
+                      }}
+                    >
+                      Return
+                    </p>
+                  </div>
+                </button>
+              </ContainerButton2>
+            ) : (
+              <ContainerNextLevel>
+                <button
+                  className="button-main"
+                  style={{
+                    width: "100%",
+                  }}
+                  onClick={() => {
+                    if (localStorage.sanity === "chill") {
+                      if (
+                        Number(localStorage.chillCurrentLevel) < 13 &&
+                        Number(localStorage.chillLevel) ===
+                          Number(localStorage.chillCurrentLevel)
+                      )
+                        localStorage.setItem(
+                          "chillCurrentLevel",
+                          Number(localStorage.chillCurrentLevel) + 1
+                        );
+                    } else if (localStorage.sanity === "crazy") {
+                      if (
+                        Number(localStorage.crazyCurrentLevel) < 13 &&
+                        Number(localStorage.crazyLevel) ===
+                          Number(localStorage.crazyCurrentLevel)
+                      )
+                        localStorage.setItem(
+                          "crazyCurrentLevel",
+                          Number(localStorage.crazyCurrentLevel) + 1
+                        );
+                    }
+                    localStorage.removeItem("countDown");
+                    ResetGame();
+                    if (localStorage.sanity === "chill")
+                      if (Number(localStorage.chillCurrentLevel) === 13)
+                        navigate("/Story", { replace: true });
+                      else navigate("/Level", { replace: true });
+                    if (localStorage.sanity === "crazy")
+                      if (Number(localStorage.crazyCurrentLevel) === 13)
+                        navigate("/Story", { replace: true });
+                      else navigate("/Level", { replace: true });
+                  }}
+                >
+                  <div
+                    className="container-buttonChildren"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        localStorage.sanity === "chill"
+                          ? localStorage.chillCurrentLevel < 12 && "38% 10% 10%"
+                          : localStorage.sanity === "crazy" &&
+                            localStorage.crazyCurrentLevel < 12 &&
+                            "38% 10% 10%",
+                      placeContent: "center",
+                    }}
+                  >
+                    {(localStorage.sanity === "chill" &&
+                      Number(localStorage.chillCurrentLevel) < 12) ||
+                    (localStorage.sanity === "crazy" &&
+                      Number(localStorage.crazyCurrentLevel) < 12) ? (
+                      <>
+                        <p className="buttonChildren-p">Next Session</p>
+                        <FontAwesomeIcon
+                          icon={faAngleDoubleRight}
+                          style={{
+                            fontSize: "1.8rem",
+                            animation: "fa-beat-fade 1500ms linear infinite",
+                          }}
+                        />
+                        <p
+                          className="buttonChildren-p"
+                          style={{
+                            fontSize: "2rem",
+                            fontWeight: "666",
+                            background: "inherit",
+                            backgroundClip: "inherit",
+                            WebkitBackgroundClip: "inherit",
+                            WebkitTextFillColor: "inherit",
+                            animation:
+                              "fa-shake 1500ms linear infinite both alternate",
+                          }}
+                        >
+                          {localStorage.sanity === "chill" &&
+                          Number(localStorage.chillCurrentLevel) -
+                            Number(localStorage.chillLevel) ===
+                            0
+                            ? Number(localStorage.chillLevel) + 1
+                            : localStorage.sanity === "chill" &&
+                              Number(localStorage.chillCurrentLevel)}
+
+                          {localStorage.sanity === "crazy" &&
+                          Number(localStorage.crazyCurrentLevel) -
+                            Number(localStorage.crazyLevel) ===
+                            0
+                            ? Number(localStorage.crazyLevel) + 1
+                            : localStorage.sanity === "crazy" &&
+                              Number(localStorage.crazyCurrentLevel)}
+                        </p>
+                      </>
+                    ) : (
                       <p
                         className="buttonChildren-p"
                         style={{
-                          fontSize: "2rem",
-                          fontWeight: "666",
                           background: "inherit",
                           backgroundClip: "inherit",
                           WebkitBackgroundClip: "inherit",
                           WebkitTextFillColor: "inherit",
-                          animation:
-                            "fa-shake 1500ms linear infinite both alternate",
+                          letterSpacing: "5px",
                         }}
                       >
-                        {localStorage.sanity === "chill" &&
-                        Number(localStorage.chillCurrentLevel) -
-                          Number(localStorage.chillLevel) ===
-                          0
-                          ? Number(localStorage.chillLevel) + 1
-                          : localStorage.sanity === "chill" &&
-                            Number(localStorage.chillCurrentLevel)}
-
-                        {localStorage.sanity === "crazy" &&
-                        Number(localStorage.crazyCurrentLevel) -
-                          Number(localStorage.crazyLevel) ===
-                          0
-                          ? Number(localStorage.crazyLevel) + 1
-                          : localStorage.sanity === "crazy" &&
-                            Number(localStorage.crazyCurrentLevel)}
+                        <img
+                          src={Party}
+                          alt="party"
+                          style={{
+                            width: "20px",
+                            marginRight: "10px",
+                          }}
+                        />
+                        Congratulations
+                        <img
+                          src={Confetti}
+                          alt="confetti"
+                          style={{
+                            width: "20px",
+                            marginLeft: "5px",
+                          }}
+                        />
                       </p>
-                    </>
-                  ) : (
-                    <p
-                      className="buttonChildren-p"
-                      style={{
-                        background: "inherit",
-                        backgroundClip: "inherit",
-                        WebkitBackgroundClip: "inherit",
-                        WebkitTextFillColor: "inherit",
-                        letterSpacing: "5px",
-                      }}
-                    >
-                      <img
-                        src={Party}
-                        alt="party"
-                        style={{
-                          width: "20px",
-                          marginRight: "10px",
-                        }}
-                      />
-                      Congratulations
-                      <img
-                        src={Confetti}
-                        alt="confetti"
-                        style={{
-                          width: "20px",
-                          marginLeft: "5px",
-                        }}
-                      />
-                    </p>
-                  )}
-                </div>
-              </button>
-            </ContainerNextLevel>
-          )}
-        </ContainerGame>
-      </section>
+                    )}
+                  </div>
+                </button>
+              </ContainerNextLevel>
+            )}
+          </ContainerGame>
+        </section>
 
-      <section
-        style={{
-          display: "flex",
-          flexFlow: "column wrap",
-          margin: "30px 0",
-          padding: "10px",
-          background: "#02001d",
-          boxShadow:
-            "0px 0px 0px 2px #372f85," +
-            "0px 0px 0px 5px #02001d," +
-            "0px 0px 5px 9px #090a24",
-        }}
-      >
-        <h1
-          className="header2-h1"
+        <section
           style={{
-            fontSize: "2.5rem",
-            border: "none",
-            textAlign: "left",
+            display: "flex",
+            flexFlow: "column wrap",
+            margin: "30px 0",
+            padding: "10px",
+            background: "#02001d",
+            boxShadow:
+              "0px 0px 0px 2px #372f85," +
+              "0px 0px 0px 5px #02001d," +
+              "0px 0px 5px 9px #090a24",
           }}
         >
-          Game Details
-        </h1>
-        <p
-          className="game2Children-p"
-          style={{
-            color: "#372f85",
-            wordBreak: "break-word",
-            textAlign: "justify",
-          }}
-        >
-          The blind man is in a predicament and needs your help. Every session
-          has a corresponding challenge. The first fifteen(15) seconds will be
-          your window to memorize the sequence based on the current challenge.
-          The next sixty(60) seconds is your limit to solve the problem. The
-          Pills Order will be your guideline to gain clues for his daughter.
-          Failing to do so will lead to the death of the blind man.
-        </p>
+          <h1
+            className="header2-h1"
+            style={{
+              fontSize: "2.5rem",
+              border: "none",
+              textAlign: "left",
+            }}
+          >
+            Game Details
+          </h1>
+          <p
+            className="game2Children-p"
+            style={{
+              color: "#372f85",
+              wordBreak: "break-word",
+              textAlign: "justify",
+            }}
+          >
+            The blind man is in a predicament and needs your help. Every session
+            has a corresponding challenge. The first fifteen(15) seconds will be
+            your window to memorize the sequence based on the current challenge.
+            The next sixty(60) seconds is your limit to solve the problem. The
+            Pills Order will be your guideline to gain clues for his daughter.
+            Failing to do so will lead to the death of the blind man.
+          </p>
+        </section>
       </section>
-    </section>
+    </ContainerMain>
   );
 }
 
@@ -1089,7 +1214,7 @@ const BlindManDaughter = (props) => {
           alt={props.name === "daughter" ? "Daughter" : "Blind Man"}
           style={{
             width: "100%",
-            zIndex: props.name === "daughter" && "-1",
+            zIndex: "-1",
             position: "absolute",
             top: "0",
             bottom: "0",
@@ -1375,6 +1500,7 @@ const BlindManDaughter = (props) => {
                     fontSize: "0.85rem",
                     fontWeight: "700",
                     textAlign: "justify",
+                    wordBreak: "break-word",
                     width: "97.5%",
                     padding: "5px",
                     animation:
@@ -1720,7 +1846,7 @@ const CheckerContainer = (props) => {
             props.game <= 16 &&
             props.countUp.current !== 10000)
             ? "#000c1a"
-            : "#e0fbfc",
+            : props.game !== 99 && "#e0fbfc",
         border: "1px solid #372f85",
         backgroundColor:
           props.currentIndex.current[props.id] === props.id
@@ -1742,7 +1868,7 @@ const CheckerContainer = (props) => {
             : props.currentIndex.current[props.id] === props.id &&
               props.indexCorrect.current < 16 &&
               "background-change2 800ms ease",
-        transition: props.countUp.current < 16 && "500ms",
+        transition: props.countUp.current < 16 && props.game !== 99 && "500ms",
       }}
     >
       {props.array}

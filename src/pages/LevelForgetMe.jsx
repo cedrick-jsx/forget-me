@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ContainerMain, ContainerHeader } from "../App.jsx";
+import { ContainerMain, ContainerHeader, ContainerSub } from "../App.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import daughter1 from "../assets/img/daughter/daughter1.gif";
@@ -37,7 +37,7 @@ export default function LevelForgetMe() {
     return (
       <section
         style={{
-          width: "1200px",
+          width: "100%",
           display: "flex",
           flexFlow: props.name === "main" ? "column nowrap" : "row wrap",
           placeContent: "center",
@@ -54,11 +54,13 @@ export default function LevelForgetMe() {
 
   return (
     <LevelContainer name="main">
-      <ContainerMain>
-        <ContainerHeader>
-          <h1 className="header-h1">Session</h1>
-          <h1 className="header-h1">{localStorage.sanity}</h1>
-        </ContainerHeader>
+      <ContainerMain value="level">
+        <ContainerSub value="level">
+          <ContainerHeader>
+            <h1 className="header-h1">Session</h1>
+            <h1 className="header-h1">{localStorage.sanity}</h1>
+          </ContainerHeader>
+        </ContainerSub>
       </ContainerMain>
 
       <LevelContainer name="level">
