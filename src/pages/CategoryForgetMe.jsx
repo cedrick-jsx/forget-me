@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDiceD20,
   faDiceD6,
+  faLock,
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,8 +31,20 @@ export default function CategoryForgetMe() {
 
         <ContainerButton>
           <ButtonMain buttonName="crazy">
-            <FontAwesomeIcon icon={faDiceD20} />
-            <p className="buttonChildren-p">Crazy</p>
+            <FontAwesomeIcon
+              icon={
+                Number(localStorage.chillCurrentLevel < 13) ||
+                !localStorage.chillCurrentLevel
+                  ? faLock
+                  : faDiceD20
+              }
+            />
+            <p className="buttonChildren-p">
+              {Number(localStorage.chillCurrentLevel < 13) ||
+              !localStorage.chillCurrentLevel
+                ? "?????"
+                : "Crazy"}
+            </p>
           </ButtonMain>
         </ContainerButton>
 

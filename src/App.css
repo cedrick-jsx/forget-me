@@ -28,6 +28,7 @@
 body {
   background: url("./assets/img/background/bg.jpg") no-repeat center fixed;
   background-size: cover;
+  scroll-behavior: smooth;
 }
 
 .container-main {

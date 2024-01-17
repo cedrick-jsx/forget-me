@@ -564,7 +564,6 @@ export default function PlayForgetMe() {
         }
       }
     }, 1000);
-
     return () => clearTimeout(timerGame);
   }, [game]);
 
@@ -1501,6 +1500,8 @@ const BlindManDaughter = (props) => {
                     fontWeight: "700",
                     textAlign: "justify",
                     wordBreak: "break-word",
+                    wordSpacing: "-0.5rem",
+                    whiteSpace: "wrap",
                     width: "97.5%",
                     padding: "5px",
                     animation:
