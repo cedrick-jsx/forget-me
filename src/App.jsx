@@ -5,8 +5,20 @@ import StoryForgetMe from "./pages/StoryForgetMe";
 import CategoryForgetMe from "./pages/CategoryForgetMe";
 import LevelForgetMe from "./pages/LevelForgetMe";
 import PlayForgetMe from "./pages/PlayForgetMe";
+import { useEffect } from "react";
+import useSound from "use-sound";
+import soundBg from "./assets/sound/bg/piano.wav";
+import soundButton from "./assets/sound/click/button.wav";
+import soundHover from "./assets/sound/click/hover.wav";
 
 export default function App() {
+  useEffect(() => {
+    new Audio(soundBg).play();
+    setInterval(() => {
+      new Audio(soundBg).play();
+    }, 33500);
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<StartForgetMe />} />
@@ -74,8 +86,10 @@ const ContainerNextLevel = (props) => {
 
 const ButtonMain = (props) => {
   const navigate = useNavigate();
+  const [play] = useSound(soundButton);
 
   const navigatePage = () => {
+    play();
     switch (props.buttonName) {
       case "start": {
         navigate("/Category", { replace: true });
@@ -115,6 +129,7 @@ const ButtonMain = (props) => {
         true
       }
       className="button-main"
+      onMouseEnter={() => new Audio(soundHover).play()}
       onClick={navigatePage}
     >
       <div

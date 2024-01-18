@@ -58,6 +58,12 @@ import Emoji11 from "../assets/img/emoji/daughter11.webp";
 import Emoji12 from "../assets/img/emoji/daughter12.webp";
 import Skull from "../assets/img/emoji/skull.webp";
 import Heart from "../assets/img/emoji/red-heart.webp";
+import useSound from "use-sound";
+import soundError from "../assets/sound/click/error.mp3";
+import soundTime from "../assets/sound/click/time.wav";
+import soundButton from "../assets/sound/click/button.wav";
+import soundOver from "../assets/sound/click/gameover.wav";
+import soundHover from "../assets/sound/click/hover.wav";
 
 const daughters = {
   Name: [
@@ -369,7 +375,10 @@ export default function PlayForgetMe() {
   const [isNextLevel, setIsNextLevel] = useState(false);
   const [isShake, setIsShake] = useState(false);
 
+  const [play] = useSound(soundError);
+
   const ResetGame = () => {
+    new Audio(soundButton).play();
     contentChecker = [];
     temporaryArray.current = [];
     correctIndex.current = [];
@@ -538,6 +547,7 @@ export default function PlayForgetMe() {
     const timerGame = setTimeout(() => {
       if (countUp.current < 16) {
         countUp.current += 1;
+        new Audio(soundTime).play();
         setGame(() => countUp.current);
         if (countUp.current === 16) {
           countUp.current = 10000;
@@ -553,6 +563,7 @@ export default function PlayForgetMe() {
           setIsNextLevel(true);
         } else {
           countDown.current -= 1;
+          new Audio(soundTime).play();
           setGame(() => countDown.current);
           if (countDown.current === 0) {
             countDown.current = 0;
@@ -560,6 +571,7 @@ export default function PlayForgetMe() {
             setIsFailed(true);
             setIsDisable(true);
             setGame(() => "Zero");
+            new Audio(soundOver).play();
           }
         }
       }
@@ -686,17 +698,20 @@ export default function PlayForgetMe() {
                   pointerEvents: correctIndex.current[id] === id && "none",
                   transition: countUp.current < 16 && "500ms",
                 }}
+                onMouseEnter={() => new Audio(soundHover).play()}
                 onClick={() => {
                   if (contentChecker[indexCorrect.current] === array) {
                     correctIndex.current[id] = id;
                     currentIndex.current[indexCorrect.current] =
                       indexCorrect.current;
                     indexCorrect.current++;
+                    new Audio(soundButton).play();
                   } else {
                     if (countDown.current <= 5) {
                       countDown.current = 1;
                     } else {
                       setIsShake(true);
+                      play();
                       countDown.current -= 5;
                     }
                   }
@@ -778,6 +793,7 @@ export default function PlayForgetMe() {
                   style={{
                     width: "185px",
                   }}
+                  onMouseEnter={() => new Audio(soundHover).play()}
                   onClick={ResetGame}
                 >
                   <div
@@ -806,6 +822,7 @@ export default function PlayForgetMe() {
                   style={{
                     width: "185px",
                   }}
+                  onMouseEnter={() => new Audio(soundHover).play()}
                   onClick={() => {
                     ResetGame();
                     navigate("/Category", { replace: true });
@@ -839,6 +856,7 @@ export default function PlayForgetMe() {
                   style={{
                     width: "100%",
                   }}
+                  onMouseEnter={() => new Audio(soundHover).play()}
                   onClick={() => {
                     if (localStorage.sanity === "chill") {
                       if (

@@ -14,6 +14,8 @@ import daughter9 from "../assets/img/daughter/daughter9.gif";
 import daughter10 from "../assets/img/daughter/daughter10.gif";
 import daughter11 from "../assets/img/daughter/daughter11.gif";
 import daughter12 from "../assets/img/daughter/daughter12.gif";
+import soundButton from "../assets/sound/click/button.wav";
+import soundHover from "../assets/sound/click/hover.wav";
 
 const daughters = [
   "Olivia",
@@ -174,11 +176,13 @@ export default function LevelForgetMe() {
               backgroundSize: "cover",
               transition: "300ms",
             }}
+            onMouseEnter={() => new Audio(soundHover).play()}
             onClick={() => {
               if (localStorage.sanity === "chill")
                 localStorage.setItem("chillLevel", `${id + 1}`);
               else if (localStorage.sanity === "crazy")
                 localStorage.setItem("crazyLevel", `${id + 1}`);
+              new Audio(soundButton).play();
               navigate("/Play", { replace: true });
             }}
           >
