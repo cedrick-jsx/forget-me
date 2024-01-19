@@ -12,12 +12,14 @@ import soundButton from "./assets/sound/click/button.wav";
 import soundHover from "./assets/sound/click/hover.wav";
 
 export default function App() {
+  const [play] = useSound(soundBg);
+
   useEffect(() => {
-    new Audio(soundBg).play();
+    play();
     setInterval(() => {
-      new Audio(soundBg).play();
+      play();
     }, 33500);
-  }, []);
+  });
 
   return (
     <Routes>
@@ -86,10 +88,9 @@ const ContainerNextLevel = (props) => {
 
 const ButtonMain = (props) => {
   const navigate = useNavigate();
-  const [play] = useSound(soundButton);
 
   const navigatePage = () => {
-    play();
+    new Audio(soundButton).play();
     switch (props.buttonName) {
       case "start": {
         navigate("/Category", { replace: true });
