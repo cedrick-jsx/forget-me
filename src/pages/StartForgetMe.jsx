@@ -67,7 +67,7 @@ export default function StartForgetMe() {
                   <img src={fmLogo} alt="Logo" />
                 </div>
                 <div className="header-forget back face">G</div>
-                <div className="header-forget front face">G</div>{" "}
+                <div className="header-forget front face">G</div>
               </div>
             </div>
 
