@@ -64,7 +64,9 @@ import soundTime from "../assets/sound/click/time.wav";
 import soundButton from "../assets/sound/click/button.wav";
 import soundOver from "../assets/sound/click/gameover.wav";
 import soundHover from "../assets/sound/click/hover.wav";
-
+import soundCorrect from "../assets/sound/click/correct.wav";
+import soundWin from "../assets/sound/click/win.mp3";
+import soundPills from "../assets/sound/click/pills.wav";
 const daughters = {
   Name: [
     "Olivia",
@@ -561,6 +563,7 @@ export default function PlayForgetMe() {
           localStorage.setItem("countDown", countDown.current);
           countDown.current = 0;
           setIsNextLevel(true);
+          new Audio(soundWin).play();
         } else {
           countDown.current -= 1;
           new Audio(soundTime).play();
@@ -698,14 +701,14 @@ export default function PlayForgetMe() {
                   pointerEvents: correctIndex.current[id] === id && "none",
                   transition: countUp.current < 16 && "500ms",
                 }}
-                onMouseEnter={() => new Audio(soundHover).play()}
+                onMouseEnter={() => new Audio(soundPills).play()}
                 onClick={() => {
                   if (contentChecker[indexCorrect.current] === array) {
                     correctIndex.current[id] = id;
                     currentIndex.current[indexCorrect.current] =
                       indexCorrect.current;
                     indexCorrect.current++;
-                    new Audio(soundButton).play();
+                    new Audio(soundCorrect).play();
                   } else {
                     if (countDown.current <= 5) {
                       countDown.current = 1;
